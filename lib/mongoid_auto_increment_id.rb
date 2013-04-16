@@ -27,9 +27,14 @@ module Mongoid
     def as_document
       result = super_as_document
       if result["_id"].blank?
-        result["_id"] = Identity.generate_id(self)
+        result["_id"] = Identity.generate_id(self)+SEED.to_i
       end
       result
+    end
+
+    def self.const_missing(name)
+      return 10000 if "SEED".casecmp(name.to_s) == 0
+      super
     end
   end
 end
